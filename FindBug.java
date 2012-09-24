@@ -22,7 +22,7 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
-
+  //假如该脚本位置是/bTrace/samples/下面；则执行该脚本命令为:btrace -cp ../build/ pid ./FindBug.java 
 package com.sun.btrace.samples;
 
 import com.sun.btrace.annotations.*;
