@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+
+<kv_server>
+        <kv_group type="email">
+                <kv ip="localhost" kv_id="1" port="50001" con_per="rw" con_type="long" con_min="1" con_max="10" />
+        </kv_group>
+</kv_server>

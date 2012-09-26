@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MBook">
+	<resultMap id="MBookResult" class="com.pw.merge.model.MBook">
+		<result property="book_id" column="book_id" jdbcType="INTEGER" />
+		<result property="book_name" column="book_name" jdbcType="VARCHAR" />
+		<result property="cover_url" column="cover_url" jdbcType="VARCHAR" />
+		<result property="author_name" column="author_name" jdbcType="VARCHAR" />
+		<result property="latest_chapter_name" column="latest_chapter_name" jdbcType="VARCHAR" />
+		<result property="description" column="description" jdbcType="VARCHAR" />
+		<result property="create_time" column="create_time" jdbcType="TIMESTAMP" />
+		<result property="update_time" column="update_time" jdbcType="TIMESTAMP" />
+		<result property="status" column="status" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<insert id="insertMBook">
+	    <![CDATA[
+	      insert into book (book_id,book_name,cover_url,author_name,latest_chapter_name,
+	      description,create_time,update_time,status) values 
+	      (#book_id#,#book_name#,#cover_url#,#author_name#,#latest_chapter_name#,
+	      #description#,#create_time#,#update_time#,#status#)
+	    ]]>
+	    <selectKey keyProperty="book_id" resultClass="long">
+            <![CDATA[
+                SELECT LAST_INSERT_ID() as id 
+            ]]>
+        </selectKey>
+	</insert>
+	
+</sqlMap>

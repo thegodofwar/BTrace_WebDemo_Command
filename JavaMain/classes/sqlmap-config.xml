@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+    <settings cacheModelsEnabled="true" enhancementEnabled="true"
+              lazyLoadingEnabled="true" errorTracingEnabled="true" maxRequests="32"
+              maxSessions="10" useStatementNamespaces="true"/>
+    <sqlMap resource="sqlmaps/BookSQL.xml" />
+    <sqlMap resource="sqlmaps/ChapterSQL.xml" />
+    <sqlMap resource="sqlmaps/SiteSQL.xml" />
+    <sqlMap resource="sqlmaps/EntrySQL.xml" />
+    <sqlMap resource="sqlmaps/RegularSQL.xml" />
+    <sqlMap resource="sqlmaps/ErrorSQL.xml" />
+    <sqlMap resource="sqlmaps/TomeSQL.xml" />
+</sqlMapConfig>

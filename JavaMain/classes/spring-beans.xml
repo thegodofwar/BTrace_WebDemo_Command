@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                          http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                          http://www.springframework.org/schema/context
+                          http://www.springframework.org/schema/context/spring-context-2.5.xsd
+                          http://www.springframework.org/schema/tx
+        				  http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+	<context:annotation-config />
+	<context:component-scan base-package="org.spring.demo.controller" />
+	
+	<bean class="com.pw.spider.Util.SpringIoCUtil" />
+	
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+				<value>classpath:mjdbc.properties</value>
+				<value>classpath:indexDir.properties</value>
+			</list>
+		</property>
+	</bean>
+	<!-- Total definition and SqlMap setup for iBATIS Database Layer -->
+	<bean id="datasource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="initialSize" value="${jdbc.initialSize}" /><!-- 初始化的连接数 -->
+		<property name="maxActive" value="${jdbc.maxActive}" /><!--  同一时间最大的活跃连接数-->
+		<property name="maxIdle" value="${jdbc.maxIdle}" /><!-- 同一时间最大的空闲连接数 -->
+		<property name="maxWait" value="5000" /><!-- 当没有可用连接时，每个连接最大等待时间，毫秒 -->
+		<property name="defaultAutoCommit" value="true" /><!-- 是否自动提交 -->
+		<property name="removeAbandoned" value="true" /><!--  设置为true，则当一个连接等待超过removeAbandonedTimeout可能被移除-->
+		<property name="removeAbandonedTimeout" value="60" /><!--  秒-->
+		<property name="testOnBorrow" value="true" /><!--  当从池子中拿出连接时，是否检测，检测失败会被丢弃。如果设置为true，则validationQuery不能为空-->
+		<property name="testWhileIdle" value="true" /><!--是否对空闲的连接做验证，前提是空闲对象回收器开启状态  -->
+		<property name="validationQuery" value="select 1" /><!-- 用于检测是否可用的sql语句，select且至少返回一行 -->
+		<property name="poolPreparedStatements" value="true" /><!--  -->
+		<property name="timeBetweenEvictionRunsMillis" value="600000" /><!--以毫秒表示空闲对象回收器由运行间隔。值为负数时表示不运行空闲对象回收器  若需要回收, 该值最好小于 minEvictableIdleTimeMillis 值-->
+		<property name="minEvictableIdleTimeMillis" value="3600000" /><!-- 被空闲对象回收器回收前在池中保持空闲状态的最小时间, 毫秒表示  -->
+	</bean>
+	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="dataSource" ref="datasource" />
+		<property name="configLocation" value="classpath:sqlmap-config.xml" />
+	</bean>
+	<bean id="mdatasource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${mjdbc.driverClassName}" />
+		<property name="url" value="${mjdbc.url}" />
+		<property name="username" value="${mjdbc.username}" />
+		<property name="password" value="${mjdbc.password}" />
+		<property name="initialSize" value="${mjdbc.initialSize}" /><!-- 初始化的连接数 -->
+		<property name="maxActive" value="${mjdbc.maxActive}" /><!--  同一时间最大的活跃连接数-->
+		<property name="maxIdle" value="${mjdbc.maxIdle}" /><!-- 同一时间最大的空闲连接数 -->
+		<property name="maxWait" value="5000" /><!-- 当没有可用连接时，每个连接最大等待时间，毫秒 -->
+		<property name="defaultAutoCommit" value="true" /><!-- 是否自动提交 -->
+		<property name="removeAbandoned" value="true" /><!--  设置为true，则当一个连接等待超过removeAbandonedTimeout可能被移除-->
+		<property name="removeAbandonedTimeout" value="60" /><!--  秒-->
+		<property name="testOnBorrow" value="true" /><!--  当从池子中拿出连接时，是否检测，检测失败会被丢弃。如果设置为true，则validationQuery不能为空-->
+		<property name="testWhileIdle" value="true" /><!--是否对空闲的连接做验证，前提是空闲对象回收器开启状态  -->
+		<property name="validationQuery" value="select 1" /><!-- 用于检测是否可用的sql语句，select且至少返回一行 -->
+		<property name="poolPreparedStatements" value="true" /><!--  -->
+		<property name="timeBetweenEvictionRunsMillis" value="600000" /><!--以毫秒表示空闲对象回收器由运行间隔。值为负数时表示不运行空闲对象回收器  若需要回收, 该值最好小于 minEvictableIdleTimeMillis 值-->
+		<property name="minEvictableIdleTimeMillis" value="3600000" /><!-- 被空闲对象回收器回收前在池中保持空闲状态的最小时间, 毫秒表示  -->
+	</bean>
+	<bean id="msqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="dataSource" ref="mdatasource" />
+		<property name="configLocation" value="classpath:msqlmap-config.xml" />
+	</bean>
+	<bean id="bookDao" class="com.pw.spider.dao.impl.BookDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<bean id="chapterDao" class="com.pw.spider.dao.impl.ChapterDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<bean id="siteDao" class="com.pw.spider.dao.impl.SiteDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<bean id="entryDao" class="com.pw.spider.dao.impl.EntryDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<bean id="regularDao" class="com.pw.spider.dao.impl.RegularDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<bean id="errorDao" class="com.pw.spider.dao.impl.ErrorDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<bean id="tomeDao" class="com.pw.spider.dao.impl.TomeDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<bean id="updatePageService" class="com.pw.spider.service.impl.UpdatePageServiceImpl">
+	    <property name="regularDao" ref="regularDao"/>
+	    <property name="entryDao" ref="entryDao"/>
+	    <property name="siteDao" ref="siteDao"/>
+	</bean>
+	<bean id="coverPageService" class="com.pw.spider.service.impl.CoverPageServiceImpl">
+	     <property name="siteDao" ref="siteDao"/>
+	     <property name="regularDao" ref="regularDao"/>
+	</bean>
+	<bean id="dirPageService" class="com.pw.spider.service.impl.DirPageServiceImpl">
+	     <property name="siteDao" ref="siteDao"/>
+	     <property name="regularDao" ref="regularDao"/>
+	</bean>
+	
+	 <!--
+    <bean name="kvClient" class="com.wanmei.kv.client.KVClient" init-method="build">
+        <constructor-arg><value>kv.xml</value></constructor-arg>
+    </bean>
+    
+    <bean id="contentSaveService" class="com.pw.spider.service.impl.KVContentSaveService">
+	</bean>
+    
+   
+   <bean id="contentPageService" class="com.pw.spider.service.impl.ContentPageServiceImpl">
+	     <property name="siteDao" ref="siteDao"/>
+	     <property name="regularDao" ref="regularDao"/>
+	     <property name="chapterDao" ref="chapterDao"/>
+	     <property name="contentSaveService" ref="contentSaveService"/>
+	</bean>
+	-->
+	
+	<bean id="mBookDao" class="com.pw.merge.dao.impl.MBookDaoImpl">
+		<property name="sqlMapClient" ref="msqlMapClient" />
+	</bean>
+   
+</beans>
