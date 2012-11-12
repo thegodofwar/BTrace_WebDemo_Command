@@ -3,7 +3,7 @@
 2.git config --global user.name "thegodofwar"
   git config --global user.email thegodofwar9@gmail.com
   
-3.git init
+3.(a.mkdir Pro_Name in D  b.cd D:)git init
 
 4.git add .
 
